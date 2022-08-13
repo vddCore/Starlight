@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starlight", "Starlight\Starlight.csproj", "{A0DF4240-61A0-4B35-A636-AB8383A92E56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starlight.Test", "Starlight.Test\Starlight.Test.csproj", "{79AD18B5-5180-432C-94A7-3F9433DC4EDA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A0DF4240-61A0-4B35-A636-AB8383A92E56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0DF4240-61A0-4B35-A636-AB8383A92E56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0DF4240-61A0-4B35-A636-AB8383A92E56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0DF4240-61A0-4B35-A636-AB8383A92E56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79AD18B5-5180-432C-94A7-3F9433DC4EDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79AD18B5-5180-432C-94A7-3F9433DC4EDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79AD18B5-5180-432C-94A7-3F9433DC4EDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79AD18B5-5180-432C-94A7-3F9433DC4EDA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
