@@ -30,25 +30,37 @@ static void PQtoXY(int p, int q)
     
 }
 
-mat.Clear();
-mat.SetBrightness(BrightnessMode.Dim);
+mat.ConfigureBuiltInAnimation(
+    new BuiltInAnimation(
+        BuiltInAnimation.Running.RogLogoGlitch,
+        BuiltInAnimation.Sleeping.Starfield,
+        BuiltInAnimation.Shutdown.SeeYa,
+        BuiltInAnimation.Startup.StaticEmergence
+    )
+);
 
-for (var y = 0; y < mat.Rows; y++)
-{
-    var cols = mat.Columns(y);
+mat.ToggleBuiltInAnimation(true);
+mat.SetBrightness(BrightnessMode.Full);
 
-    for (var x = 0; x < cols; x++)
-    {
-        if (x == 0 || x == cols - 1 || y == 0 || y == mat.Rows - 1)
-        {
-            mat.SetLedPlanar(x, y, 0xFF);
-        }
-    }
-}
-
-mat.Present();
-
-
+// mat.Clear();
+// mat.SetBrightness(BrightnessMode.Dim);
+//
+// for (var y = 0; y < mat.Rows; y++)
+// {
+//     var cols = mat.Columns(y);
+//
+//     for (var x = 0; x < cols; x++)
+//     {
+//         if (x == 0 || x == cols - 1 || y == 0 || y == mat.Rows - 1)
+//         {
+//             mat.SetLedPlanar(x, y, 0xFF);
+//         }
+//     }
+// }
+//
+// mat.Present();
+//
+//
 // while (true)
 // {
 //     for (var row = 0; row < 61; row++)
