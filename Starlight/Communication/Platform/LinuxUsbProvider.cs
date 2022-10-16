@@ -41,7 +41,7 @@ namespace Starlight.Communication.Platform
             if ((errcode = libusb_detach_kernel_driver(_deviceHandle, 0)) < 0 && errcode != -5)
             {
                 throw new IOException(
-                    $"Unable to detach krnel driver from the AniMe Matrix control device: {libusb_strerror(errcode)} ({errcode})"
+                    $"Unable to detach kernel driver from the AniMe Matrix control device: {libusb_strerror(errcode)} ({errcode})"
                 );
             }
 
