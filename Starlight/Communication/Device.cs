@@ -1,32 +1,21 @@
-﻿using System.Reflection;
-using HidSharp;
+﻿using Starlight.Communication.Platform;
 
 namespace Starlight.Communication
 {
     public abstract class Device : IDisposable
     {
-        protected HidDevice HidDevice { get; }
-        protected HidStream HidStream { get; }
-
+        private static UsbProvider? _usbProvider;
+        
         protected Device(ushort vendorId, ushort productId, int maxFeatureReportLength)
         {
-            try
+            if (OperatingSystem.IsLinux())
             {
-                HidDevice = DeviceList.Local
-                    .GetHidDevices(vendorId, productId)
-                    .First(x => x.GetMaxFeatureReportLength() == maxFeatureReportLength);
+                _usbProvider = new LinuxUsbProvider(vendorId, productId);
             }
-            catch
+            else if (OperatingSystem.IsWindows())
             {
-                throw new IOException("AniMe Matrix control device was not found on your machine.");
+                _usbProvider = new WindowsUsbProvider(vendorId, productId, maxFeatureReportLength);
             }
-
-            var config = new OpenConfiguration();
-            config.SetOption(OpenOption.Interruptible, true);
-            config.SetOption(OpenOption.Exclusive, false);
-            config.SetOption(OpenOption.Priority, 10);
-
-            HidStream = HidDevice.Open(config);
         }
 
         protected T Packet<T>(params byte[] command) where T: Packet
@@ -34,15 +23,15 @@ namespace Starlight.Communication
             return (T)Activator.CreateInstance(typeof(T), command)!;
         }
 
-        protected void Set(Packet packet)
-           => packet.Set(HidStream);
+        public void Set(Packet packet)
+            => _usbProvider?.Set(packet.Data);
 
-        protected byte[] Get(Packet packet)
-            => packet.Get(HidStream);
+        public byte[]? Get(Packet packet)
+            => _usbProvider?.Get(packet.Data);
 
-        public virtual void Dispose()
+        public void Dispose()
         {
-            HidStream.Dispose();
+            _usbProvider?.Dispose();
         }
     }
 }

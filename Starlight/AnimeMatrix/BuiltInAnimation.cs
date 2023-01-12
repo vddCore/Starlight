@@ -2,46 +2,43 @@
 {
     public class BuiltInAnimation
     {
-        public enum StartupAnimation
+        public enum Startup
         {
             GlitchConstruction,
             StaticEmergence
         }
 
-        public enum ShutdownAnimation
+        public enum Shutdown
         {
             GlitchOut,
             SeeYa
         }
 
-        public enum SleepAnimation
+        public enum Sleeping
         {
             BannerSwipe,
             Starfield
         }
 
-        public enum RunningAnimation
+        public enum Running
         {
             BinaryBannerScroll,
             RogLogoGlitch
         }
 
-        private AnimeMatrix _animeMatrix;
+        public byte AsByte { get; }
 
-        internal BuiltInAnimation(AnimeMatrix animeMatrix)
+        public BuiltInAnimation(
+            Running running,
+            Sleeping sleeping,
+            Shutdown shutdown,
+            Startup startup
+        )
         {
-            _animeMatrix = animeMatrix;
+            AsByte |= (byte)(((int)running & 0x01) << 0);
+            AsByte |= (byte)(((int)sleeping & 0x01) << 1);
+            AsByte |= (byte)(((int)shutdown & 0x01) << 2);
+            AsByte |= (byte)(((int)startup & 0x01) << 3);
         }
-        
-        // public void ToggleBuiltInAnimation(bool enable)
-        // {
-        //     var enabled = enable ? (byte)0x80 : (byte)0x00;
-        //     Set(Packet<AnimeMatrixPacket>(0xC4, 0x01, enabled));
-        // }
-        //
-        // public void ConfigureBuiltInAnimation(BuiltInAnimation animation)
-        // {
-        //     Set(Packet<AnimeMatrixPacket>(0xC5, (byte)animation));
-        // }
     }
 }

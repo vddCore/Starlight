@@ -6,7 +6,8 @@ namespace Starlight.Communication
     public abstract class Packet
     {
         private int _currentDataIndex = 1;
-        private byte[] _data;
+
+        public byte[] Data { get; }
 
         internal Packet(byte reportId, int packetLength, params byte[] data)
         {
@@ -18,12 +19,12 @@ namespace Starlight.Communication
                 );
             }
             
-            _data = new byte[packetLength];
-            _data[0] = reportId;
+            Data = new byte[packetLength];
+            Data[0] = reportId;
 
             if (data.Length > 0)
             {
-                if (_currentDataIndex >= _data.Length)
+                if (_currentDataIndex >= Data.Length)
                 {
                     throw new ArgumentOutOfRangeException(
                         nameof(data),
@@ -43,54 +44,16 @@ namespace Starlight.Communication
             bytesWritten = 0;
 
             for (var i = 0;
-                 i < data.Length && _currentDataIndex < _data.Length - 1;
+                 i < data.Length && _currentDataIndex < Data.Length - 1;
                  i++, bytesWritten++, _currentDataIndex++)
             {
-                if (_currentDataIndex > _data.Length - 1)
+                if (_currentDataIndex > Data.Length - 1)
                     break;
 
-                _data[_currentDataIndex] = data[i];
+                Data[_currentDataIndex] = data[i];
             }
 
             return this;
-        }
-
-        public void Set(HidStream stream)
-        {
-            WrapException(() =>
-            {
-                stream.SetFeature(_data);
-                stream.Flush();
-            });
-        }
-
-        public byte[] Get(HidStream stream)
-        {
-            WrapException(() =>
-            {
-                stream.GetFeature(_data);
-                stream.Flush();
-            });
-
-            return _data;
-        }
-
-        private void WrapException(Action action)
-        {
-            try
-            {
-                action();
-            }
-            catch (IOException e)
-            {
-                if (e.InnerException is Win32Exception w32e)
-                {
-                    if (w32e.NativeErrorCode != 0)
-                    {
-                        throw;
-                    }
-                }
-            }
         }
     }
 }

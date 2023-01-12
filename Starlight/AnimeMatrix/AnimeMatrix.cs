@@ -117,11 +117,13 @@ namespace Starlight.AnimeMatrix
         {
             if (enable)
             {
-                Set(Packet<AnimeMatrixPacket>(0xC3, 0x01).AppendData(0x00));
+                Set(Packet<AnimeMatrixPacket>(0xC3, 0x01)
+                    .AppendData(0x00));
             }
             else
             {
-                Set(Packet<AnimeMatrixPacket>(0xC3, 0x01).AppendData(0x80));
+                Set(Packet<AnimeMatrixPacket>(0xC3, 0x01)
+                    .AppendData(0x80));
             }
         }
 
@@ -132,6 +134,17 @@ namespace Starlight.AnimeMatrix
             );
         }
 
+        public void ToggleBuiltInAnimation(bool enable)
+        {
+            var enabled = enable ? (byte)0x00 : (byte)0x80;
+            Set(Packet<AnimeMatrixPacket>(0xC4, 0x01, enabled));
+        }
+        
+        public void ConfigureBuiltInAnimation(BuiltInAnimation animation)
+        {
+            Set(Packet<AnimeMatrixPacket>(0xC5, animation.AsByte));
+        }
+        
         private void EnsureRowInRange(int row)
         {
             if (row < 0 || row >= Rows)
