@@ -1,0 +1,17 @@
+fn setup() {
+  io.println("hi");
+}
+
+fn pixel(x, y) {
+    scale = 2;
+
+    loc t = _time / 2;
+    loc v = 0.0;
+
+    loc c = { "x" => x / scale, "y" => y / scale };
+    v += math.sin((c.x + t));
+    v += math.sin((c.y + t) / 2.0);
+    v += math.sin((c.x + c.y + t) / 2.0);
+
+    ret math.sin(v * 3.141519);
+}

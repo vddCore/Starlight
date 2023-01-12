@@ -10,7 +10,7 @@ namespace Starlight.AnimeMatrix
         public int LedCount => 1450;
         public int Rows => 61;
 
-        private byte[] _displayBuffer = new byte[UpdatePageLength * 3];
+        private readonly byte[] _displayBuffer = new byte[UpdatePageLength * 3];
 
         public AnimeMatrix()
             : base(0x0B05, 0x193B, 640)
@@ -134,14 +134,15 @@ namespace Starlight.AnimeMatrix
             );
         }
 
-        public void ToggleBuiltInAnimation(bool enable)
+        public void SetBuiltInAnimation(bool enable)
         {
             var enabled = enable ? (byte)0x00 : (byte)0x80;
             Set(Packet<AnimeMatrixPacket>(0xC4, 0x01, enabled));
         }
         
-        public void ConfigureBuiltInAnimation(BuiltInAnimation animation)
+        public void SetBuiltInAnimation(bool enable, BuiltInAnimation animation)
         {
+            SetBuiltInAnimation(enable);
             Set(Packet<AnimeMatrixPacket>(0xC5, animation.AsByte));
         }
         
