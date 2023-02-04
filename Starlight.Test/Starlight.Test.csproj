@@ -7,7 +7,18 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Starlight.Engine\Starlight.Engine.csproj" />
       <ProjectReference Include="..\Starlight\Starlight.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="StbImageSharp" Version="2.27.13" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="anim.lua">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>
