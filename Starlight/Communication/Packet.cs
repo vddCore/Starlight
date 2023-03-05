@@ -3,13 +3,17 @@ using HidSharp;
 
 namespace Starlight.Communication
 {
-    public abstract class Packet
+    internal abstract class Packet
     {
-        private int _currentDataIndex = 1;
+        public byte[] Data { get; protected set; }
+    }
 
-        public byte[] Data { get; }
+    internal abstract class Packet<T> : Packet
+        where T : Packet
+    {
+        private int _currentDataIndex;
 
-        internal Packet(byte reportId, int packetLength, params byte[] data)
+        internal Packet(int initialDataIndex, int packetLength, params byte[] data)
         {
             if (packetLength < 1)
             {
@@ -18,9 +22,10 @@ namespace Starlight.Communication
                     "Packet length must be at least 1."
                 );
             }
-            
+
+            _currentDataIndex = initialDataIndex;
+
             Data = new byte[packetLength];
-            Data[0] = reportId;
 
             if (data.Length > 0)
             {
@@ -31,15 +36,15 @@ namespace Starlight.Communication
                         "Your packet length does not allow for initial data to be appended."
                     );
                 }
-                
+
                 AppendData(data);
             }
         }
 
-        public Packet AppendData(params byte[] data)
+        public T AppendData(params byte[] data)
             => AppendData(out _, data);
 
-        public Packet AppendData(out int bytesWritten, params byte[] data)
+        public T AppendData(out int bytesWritten, params byte[] data)
         {
             bytesWritten = 0;
 
@@ -53,7 +58,7 @@ namespace Starlight.Communication
                 Data[_currentDataIndex] = data[i];
             }
 
-            return this;
+            return this as T;
         }
     }
 }

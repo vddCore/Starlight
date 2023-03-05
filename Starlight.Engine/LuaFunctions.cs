@@ -1,6 +1,7 @@
 using System.Reflection;
 using NLua;
-using Starlight.AnimeMatrix;
+using Starlight.Asus;
+using Starlight.Asus.AnimeMatrix;
 
 namespace Starlight.Engine
 {
@@ -73,19 +74,19 @@ namespace Starlight.Engine
             switch (mode)
             {
                 case "full":
-                    _device.SetBrightness(BrightnessMode.Full);
+                    _device.SetBrightness(BrightnessLevel.Full);
                     break;
 
                 case "medium":
-                    _device.SetBrightness(BrightnessMode.Medium);
+                    _device.SetBrightness(BrightnessLevel.Medium);
                     break;
 
                 case "dim":
-                    _device.SetBrightness(BrightnessMode.Dim);
+                    _device.SetBrightness(BrightnessLevel.Dim);
                     break;
 
                 case "off":
-                    _device.SetBrightness(BrightnessMode.Off);
+                    _device.SetBrightness(BrightnessLevel.Off);
                     break;
             }
         }

@@ -1,4 +1,4 @@
-﻿namespace Starlight.AnimeMatrix
+﻿namespace Starlight.Asus.AnimeMatrix
 {
     public class BuiltInAnimation
     {

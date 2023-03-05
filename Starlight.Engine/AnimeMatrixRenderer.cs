@@ -1,6 +1,6 @@
 using System.Reflection;
 using NLua;
-using Starlight.AnimeMatrix;
+using Starlight.Asus.AnimeMatrix;
 
 namespace Starlight.Engine
 {
@@ -9,13 +9,15 @@ namespace Starlight.Engine
         private LuaFunction? _pixelCallback;
         private LuaFunction? _initCallback;
 
-        private DateTime? _lastFrameTime;
-        
+        private DateTime _oldFrameTime;
+        private DateTime _nowFrameTime;
+
         protected readonly AnimeMatrixDevice _device;
 
-        protected Lua Lua { get; private set; }
+        protected Lua? Lua { get; private set; }
 
         public double Time { get; private set; }
+        public double DeltaTime { get; private set; }
         public ulong TotalFrames { get; private set; }
 
         public bool Running { get; private set; }
@@ -23,14 +25,15 @@ namespace Starlight.Engine
         public AnimeMatrixRenderer(AnimeMatrixDevice device)
         {
             _device = device;
-            Reset();            
+
+            Reset();
         }
 
         public void LoadScript(string fileName)
         {
             Reset();
 
-            Lua.DoFile(fileName);
+            Lua!.DoFile(fileName);
             _initCallback = Lua["init"] as LuaFunction;
             _pixelCallback = Lua["pixel"] as LuaFunction;
 
@@ -38,21 +41,25 @@ namespace Starlight.Engine
             {
                 throw new InvalidOperationException("`function pixel(x,y)' is missing from your script.");
             }
-            
+
             _initCallback?.Call();
         }
 
-        public async Task Run(double framerate)
+        public async Task Run(double framerate = 30)
         {
             if (Running)
                 return;
-            
+
+            _oldFrameTime = DateTime.Now;
+            _nowFrameTime = DateTime.Now;
+
             Running = true;
-            
+
             while (Running)
             {
                 Frame();
-                await Task.Delay((int)(1 / framerate * 1000));
+                _device.Present();
+                await Task.Delay((int)((1 / framerate) * 1000));
             }
         }
 
@@ -63,26 +70,24 @@ namespace Starlight.Engine
 
         private void Frame()
         {
-            if (_lastFrameTime != null)
-            {
-                var time = DateTime.Now - _lastFrameTime;
-                Time += time.Value.TotalMilliseconds;
-                Lua["dt"] = time.Value.TotalMilliseconds / 1000f;
-            }
-            
-            Lua["frames"] = TotalFrames++;
-            Lua["t"] = Time;
+            _nowFrameTime = DateTime.Now;
+            var deltaTime = (_nowFrameTime.Ticks - _oldFrameTime.Ticks) / 10000000f;
+
+            Time += deltaTime;
+            Lua!["_time"] = Time;
+            Lua!["_delta"] = deltaTime;
+            Lua!["_frames"] = TotalFrames++;
 
             for (var y = 0; y < _device.Rows; y++)
             {
                 var cols = _device.Columns(y);
-                
+
                 for (var x = 0; x < cols; x++)
                 {
                     try
                     {
                         var value = Convert.ToDouble(_pixelCallback!.Call(x, y)[0]);
-                        _device.SetLedPlanar(x, y, (byte)(255 * value));
+                        _device.SetLedPlanar(x, y, (byte)(Math.Clamp(255f * value, 0, 255)));
                     }
                     catch (Exception e)
                     {
@@ -90,37 +95,36 @@ namespace Starlight.Engine
                     }
                 }
             }
-            
-            _device.Present();
-            _lastFrameTime = DateTime.Now;
+
+            _oldFrameTime = _nowFrameTime;
         }
 
         public void Reset()
         {
             Stop();
-            
+
             Lua?.Dispose();
             _device.Clear(true);
-            
+
             TotalFrames = 0;
             Time = 0;
-            
+
             Lua = new(true);
-            Lua["frames"] = 0;
-            Lua["t"] = 0;
-            Lua["dt"] = 0;
-            Lua["rows"] = _device.Rows;
+            Lua["_frames"] = 0;
+            Lua["_time"] = 0;
+            Lua["_delta"] = 0;
+            Lua["_rows"] = _device.Rows;
             Lua["columns"] = Lua.RegisterFunction(
-                "columns", 
+                "columns",
                 this,
                 GetType().GetMethod(
                     nameof(AnimeColumns),
-                    BindingFlags.NonPublic 
+                    BindingFlags.NonPublic
                     | BindingFlags.Instance
                 )
             );
         }
-        
+
         private int AnimeColumns(int row)
             => _device.Columns(row);
 

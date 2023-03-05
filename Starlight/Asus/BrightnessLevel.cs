@@ -1,6 +1,6 @@
-﻿namespace Starlight.AnimeMatrix
+﻿namespace Starlight.Asus
 {
-    public enum BrightnessMode : byte
+    public enum BrightnessLevel : byte
     {
         Off = 0,
         Dim = 1,

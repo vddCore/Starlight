@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Starlight.Communication;
 
-namespace Starlight.AnimeMatrix
+namespace Starlight.Asus.AnimeMatrix
 {
     public class AnimeMatrixDevice : Device
     {
@@ -13,13 +13,13 @@ namespace Starlight.AnimeMatrix
         private readonly byte[] _displayBuffer = new byte[UpdatePageLength * 3];
 
         public AnimeMatrixDevice()
-            : base(0x0B05, 0x193B, 640)
+            : base(new(0x0B05, 0x193B, maxFeatureReportLength: 640))
         {
         }
         
         public void SendRaw(params byte[] data)
         {
-            Set(Packet<AnimeMatrixPacket>(data));
+            Set(Feature<AnimeMatrixPacket>(data));
         }
 
         public int Columns(int row)
@@ -45,7 +45,7 @@ namespace Starlight.AnimeMatrix
 
         public void WakeUp()
         {
-            Set(Packet<AnimeMatrixPacket>(Encoding.ASCII.GetBytes("ASUS Tech.Inc.")));
+            Set(Feature<AnimeMatrixPacket>(Encoding.ASCII.GetBytes("ASUS Tech.Inc.")));
         }
 
         public void SetLedLinear(int address, byte value)
@@ -59,13 +59,13 @@ namespace Starlight.AnimeMatrix
             EnsureAddressableLed(address);
             _displayBuffer[address] = value;
 
-            Set(Packet<AnimeMatrixPacket>(0xC0, 0x02)
+            Set(Feature<AnimeMatrixPacket>(0xC0, 0x02)
                 .AppendData(BitConverter.GetBytes((ushort)(address + 1)))
                 .AppendData(BitConverter.GetBytes((ushort)0x0001))
                 .AppendData(value)
             );
 
-            Set(Packet<AnimeMatrixPacket>(0xC0, 0x03));
+            Set(Feature<AnimeMatrixPacket>(0xC0, 0x03));
         }
 
         public void SetLedPlanar(int x, int y, byte value)
@@ -91,59 +91,59 @@ namespace Starlight.AnimeMatrix
 
         public void Present()
         {
-            Set(Packet<AnimeMatrixPacket>(0xC0, 0x02)
+            Set(Feature<AnimeMatrixPacket>(0xC0, 0x02)
                 .AppendData(BitConverter.GetBytes((ushort)(UpdatePageLength * 0 + 1)))
                 .AppendData(BitConverter.GetBytes((ushort)UpdatePageLength))
                 .AppendData(_displayBuffer[(UpdatePageLength * 0)..(UpdatePageLength * 1)])
             );
 
-            Set(Packet<AnimeMatrixPacket>(0xC0, 0x02)
+            Set(Feature<AnimeMatrixPacket>(0xC0, 0x02)
                 .AppendData(BitConverter.GetBytes((ushort)(UpdatePageLength * 1 + 1)))
                 .AppendData(BitConverter.GetBytes((ushort)UpdatePageLength))
                 .AppendData(_displayBuffer[(UpdatePageLength * 1)..(UpdatePageLength * 2)])
             );
 
-            Set(Packet<AnimeMatrixPacket>(0xC0, 0x02)
+            Set(Feature<AnimeMatrixPacket>(0xC0, 0x02)
                 .AppendData(BitConverter.GetBytes((ushort)(UpdatePageLength * 2 + 1)))
                 .AppendData(BitConverter.GetBytes((ushort)(LedCount - UpdatePageLength * 2)))
                 .AppendData(
                     _displayBuffer[(UpdatePageLength * 2)..(UpdatePageLength * 2 + (LedCount - UpdatePageLength * 2))])
             );
 
-            Set(Packet<AnimeMatrixPacket>(0xC0, 0x03));
+            Set(Feature<AnimeMatrixPacket>(0xC0, 0x03));
         }
 
         public void SetDisplayState(bool enable)
         {
             if (enable)
             {
-                Set(Packet<AnimeMatrixPacket>(0xC3, 0x01)
+                Set(Feature<AnimeMatrixPacket>(0xC3, 0x01)
                     .AppendData(0x00));
             }
             else
             {
-                Set(Packet<AnimeMatrixPacket>(0xC3, 0x01)
+                Set(Feature<AnimeMatrixPacket>(0xC3, 0x01)
                     .AppendData(0x80));
             }
         }
 
-        public void SetBrightness(BrightnessMode mode)
+        public void SetBrightness(BrightnessLevel level)
         {
-            Set(Packet<AnimeMatrixPacket>(0xC0, 0x04)
-                .AppendData((byte)mode)
+            Set(Feature<AnimeMatrixPacket>(0xC0, 0x04)
+                .AppendData((byte)level)
             );
         }
 
         public void SetBuiltInAnimation(bool enable)
         {
             var enabled = enable ? (byte)0x00 : (byte)0x80;
-            Set(Packet<AnimeMatrixPacket>(0xC4, 0x01, enabled));
+            Set(Feature<AnimeMatrixPacket>(0xC4, 0x01, enabled));
         }
         
         public void SetBuiltInAnimation(bool enable, BuiltInAnimation animation)
         {
             SetBuiltInAnimation(enable);
-            Set(Packet<AnimeMatrixPacket>(0xC5, animation.AsByte));
+            Set(Feature<AnimeMatrixPacket>(0xC5, animation.AsByte));
         }
         
         private void EnsureRowInRange(int row)

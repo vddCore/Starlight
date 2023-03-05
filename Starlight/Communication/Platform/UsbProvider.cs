@@ -13,6 +13,8 @@ namespace Starlight.Communication.Platform
 
         public abstract void Set(byte[] data);
         public abstract byte[] Get(byte[] data);
+
+        public abstract void Write(byte[] data);
         
         public abstract void Dispose();
     }

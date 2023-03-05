@@ -27,28 +27,28 @@ namespace Starlight.Communication.Platform
             if (_deviceHandle == IntPtr.Zero)
             {
                 throw new IOException(
-                    "AniMe Matrix control device was not found on your machine or you have no permissions to open it."
+                    "The requested HID device was not found on your machine or you have no permissions to open it."
                 );
             }
 
             if ((errcode = libusb_reset_device(_deviceHandle)) < 0)
             {
                 throw new IOException(
-                    $"Unable to reset the AniMe Matrix control device: {libusb_strerror(errcode)} ({errcode})"
+                    $"Unable to reset the HID device: {libusb_strerror(errcode)} ({errcode})"
                 );
             }
 
             if ((errcode = libusb_detach_kernel_driver(_deviceHandle, 0)) < 0 && errcode != -5)
             {
                 throw new IOException(
-                    $"Unable to detach kernel driver from the AniMe Matrix control device: {libusb_strerror(errcode)} ({errcode})"
+                    $"Unable to detach kernel driver from the HID device: {libusb_strerror(errcode)} ({errcode})"
                 );
             }
 
             if ((errcode = libusb_claim_interface(_deviceHandle, 0)) < 0)
             {
                 throw new IOException(
-                    $"Unable to claim interface 0 for the AniMe Matrix control device: {libusb_strerror(errcode)} ({errcode})"
+                    $"Unable to claim interface 0 for the HID device: {libusb_strerror(errcode)} ({errcode})"
                 );
             }
         }
@@ -89,7 +89,7 @@ namespace Starlight.Communication.Platform
                     if (errcode < 0)
                     {
                         throw new IOException(
-                            $"Unable to write to the AniMe Matrix control device: {libusb_strerror(errcode)})"
+                            $"Unable to write to the HID device: {libusb_strerror(errcode)})"
                         );
                     }
                 }
@@ -99,6 +99,11 @@ namespace Starlight.Communication.Platform
         public override byte[] Get(byte[] data)
         {
             return null;
+        }
+
+        public override void Write(byte[] data)
+        {
+            throw new NotImplementedException();
         }
 
         public override void Dispose()

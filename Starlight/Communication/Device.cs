@@ -6,28 +6,48 @@ namespace Starlight.Communication
     {
         private static UsbProvider _usbProvider;
 
-        protected Device(ushort vendorId, ushort productId, int maxFeatureReportLength)
+        protected Device(DeviceCharacteristics characteristics)
         {
             if (OperatingSystem.IsLinux())
             {
-                _usbProvider = new LinuxUsbProvider(vendorId, productId);
+                _usbProvider = new LinuxUsbProvider(
+                    characteristics.VendorID, 
+                    characteristics.ProductID
+                );
             }
             else if (OperatingSystem.IsWindows())
             {
-                _usbProvider = new WindowsUsbProvider(vendorId, productId, maxFeatureReportLength);
+                _usbProvider = new WindowsUsbProvider(characteristics);
             }
         }
 
-        protected T Packet<T>(params byte[] command) where T : Packet
+        internal T Feature<T>(params byte[] command) where T : FeaturePacket
         {
             return (T)Activator.CreateInstance(typeof(T), command)!;
         }
+        
+        internal T Hid<T>(params byte[] command) where T : Packet
+        {
+            try
+            {
+                return (T)Activator.CreateInstance(typeof(T), command)!;
+            }
+            catch
+            {
+                // we'll try something else.
+            }
 
-        public void Set(Packet packet)
+            return (T)Activator.CreateInstance(typeof(T))!;
+        }
+
+        internal void Set(FeaturePacket packet)
             => _usbProvider?.Set(packet.Data);
 
-        public byte[] Get(Packet packet)
+        internal byte[] Get(FeaturePacket packet)
             => _usbProvider?.Get(packet.Data);
+
+        internal void Write(HidPacket packet)
+            => _usbProvider?.Write(packet.Data);
 
         public void Dispose()
         {

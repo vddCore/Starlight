@@ -8,18 +8,21 @@ namespace Starlight.Communication.Platform
         protected HidDevice HidDevice { get; }
         protected HidStream HidStream { get; }
 
-        public WindowsUsbProvider(ushort vendorId, ushort productId, int maxFeatureReportLength) 
-            : base(vendorId, productId)
+        public WindowsUsbProvider(DeviceCharacteristics characteristics) 
+            : base(characteristics.VendorID, characteristics.ProductID)
         {
             try
             {
+                var devices = DeviceList.Local
+                    .GetHidDevices(VendorID, ProductID);
+                    
                 HidDevice = DeviceList.Local
-                    .GetHidDevices(vendorId, productId)
-                    .First(x => x.GetMaxFeatureReportLength() == maxFeatureReportLength);
+                    .GetHidDevices(VendorID, ProductID)
+                    .First(characteristics.SatisfiedBy);
             }
             catch
             {
-                throw new IOException("AniMe Matrix control device was not found on your machine.");
+                throw new IOException("The requested HID device was not found on your machine.");
             }
 
             var config = new OpenConfiguration();
@@ -51,6 +54,15 @@ namespace Starlight.Communication.Platform
             });
 
             return data;
+        }
+
+        public override void Write(byte[] data)
+        {
+            WrapException(() =>
+            {
+                HidStream.Write(data);
+                HidStream.Flush();
+            });
         }
 
         public override void Dispose()
