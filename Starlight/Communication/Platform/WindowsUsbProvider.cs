@@ -13,9 +13,6 @@ namespace Starlight.Communication.Platform
         {
             try
             {
-                var devices = DeviceList.Local
-                    .GetHidDevices(VendorID, ProductID);
-                    
                 HidDevice = DeviceList.Local
                     .GetHidDevices(VendorID, ProductID)
                     .First(characteristics.SatisfiedBy);
