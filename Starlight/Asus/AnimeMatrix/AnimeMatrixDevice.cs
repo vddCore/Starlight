@@ -140,7 +140,7 @@ namespace Starlight.Asus.AnimeMatrix
             Set(Feature<AnimeMatrixPacket>(0xC4, 0x01, enabled));
         }
         
-        public void SetBuiltInAnimation(bool enable, BuiltInAnimation animation)
+        public void SetBuiltInAnimation(bool enable, AnimeMatrixBuiltIn animation)
         {
             SetBuiltInAnimation(enable);
             Set(Feature<AnimeMatrixPacket>(0xC5, animation.AsByte));

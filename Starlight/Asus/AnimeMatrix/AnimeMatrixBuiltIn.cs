@@ -1,6 +1,6 @@
 ﻿namespace Starlight.Asus.AnimeMatrix
 {
-    public class BuiltInAnimation
+    public class AnimeMatrixBuiltIn
     {
         public enum Startup
         {
@@ -28,7 +28,7 @@
 
         public byte AsByte { get; }
 
-        public BuiltInAnimation(
+        public AnimeMatrixBuiltIn(
             Running running,
             Sleeping sleeping,
             Shutdown shutdown,
