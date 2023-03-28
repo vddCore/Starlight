@@ -21,6 +21,7 @@ namespace Starlight.Asus.Aura
                     .Zone(zoneId)
                     .Animation(AuraAnimation.Static)
                     .PrimaryColor(color)
+                    .SecondaryColor(color)
             );
         }
         
@@ -51,7 +52,7 @@ namespace Starlight.Asus.Aura
         public void Strobe(AuraAnimationSpeed speed = AuraAnimationSpeed.Medium)
             => Strobe(0, speed);
 
-        private void Animate(
+        public void Animate(
             byte zoneId,
             AuraAnimation animation,
             Color primary,

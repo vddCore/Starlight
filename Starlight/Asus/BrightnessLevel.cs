@@ -5,6 +5,6 @@
         Off = 0,
         Dim = 1,
         Medium = 2,
-        Full = 3
+        Bright = 3
     }
 }
