@@ -4,7 +4,7 @@ namespace Starlight.Communication
 {
     public abstract class Device : IDisposable
     {
-        private static UsbProvider _usbProvider;
+        private UsbProvider _usbProvider;
 
         protected Device(DeviceCharacteristics characteristics)
         {
