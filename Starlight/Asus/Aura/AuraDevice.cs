@@ -12,6 +12,11 @@ namespace Starlight.Asus.Aura
             Mode = new AuraMode(this);
         }
 
+        public void Initialize()
+        {
+            Write(Hid<AuraPacket>());
+        }
+
         public void SetBrightness(BrightnessLevel level)
         {
             Write(Hid<AuraPacket>(0x5D, 0xBA, 0xC5, 0xC4, (byte)level));

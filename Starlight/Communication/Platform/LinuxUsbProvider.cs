@@ -4,12 +4,16 @@ namespace Starlight.Communication.Platform
 {
     internal class LinuxUsbProvider : UsbProvider
     {
+        private readonly DeviceCharacteristics _deviceCharacteristics;
+        
         private IntPtr _libUsbContext;
         private IntPtr _deviceHandle;
         
-        public LinuxUsbProvider(ushort vendorId, ushort productId) 
-            : base(vendorId, productId)
+        public LinuxUsbProvider(DeviceCharacteristics deviceCharacteristics) 
+            : base(deviceCharacteristics.VendorID, deviceCharacteristics.ProductID)
         {
+            _deviceCharacteristics = deviceCharacteristics;
+            
             var errcode = 0;
             
             if ((errcode = libusb_init(out _libUsbContext)) < 0)
@@ -22,7 +26,11 @@ namespace Starlight.Communication.Platform
                 throw new IOException("Unable to create a LibUSB context.");
             }
             
-            _deviceHandle = libusb_open_device_with_vid_pid(_libUsbContext, vendorId, productId);
+            _deviceHandle = libusb_open_device_with_vid_pid(
+                _libUsbContext,
+                _deviceCharacteristics.VendorID,
+                _deviceCharacteristics.ProductID
+            );
 
             if (_deviceHandle == IntPtr.Zero)
             {
@@ -101,10 +109,8 @@ namespace Starlight.Communication.Platform
             return null;
         }
 
-        public override void Write(byte[] data)
-        {
-            throw new NotImplementedException();
-        }
+        public override void Write(byte[] data) 
+            => Set(data);
 
         public override void Dispose()
         {

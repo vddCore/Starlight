@@ -10,10 +10,7 @@ namespace Starlight.Communication
         {
             if (OperatingSystem.IsLinux())
             {
-                _usbProvider = new LinuxUsbProvider(
-                    characteristics.VendorID, 
-                    characteristics.ProductID
-                );
+                _usbProvider = new LinuxUsbProvider(characteristics);
             }
             else if (OperatingSystem.IsWindows())
             {
