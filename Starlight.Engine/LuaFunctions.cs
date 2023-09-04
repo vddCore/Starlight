@@ -74,7 +74,7 @@ namespace Starlight.Engine
             switch (mode)
             {
                 case "full":
-                    _device.SetBrightness(BrightnessLevel.Full);
+                    _device.SetBrightness(BrightnessLevel.Bright);
                     break;
 
                 case "medium":

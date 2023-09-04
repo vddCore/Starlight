@@ -50,7 +50,7 @@ namespace Starlight.Communication.Platform
                 HidStream.Flush();
             });
 
-            return data;
+            return outData;
         }
 
         public override void Write(byte[] data)

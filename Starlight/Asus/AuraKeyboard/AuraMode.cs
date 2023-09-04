@@ -1,14 +1,14 @@
 ﻿using System.Drawing;
 
-namespace Starlight.Asus.Aura
+namespace Starlight.Asus.AuraKeyboard
 {
     public class AuraMode
     {
-        private readonly AuraDevice _aura;
+        private readonly AuraKeyboardDevice _auraKeyboard;
 
-        internal AuraMode(AuraDevice aura)
+        internal AuraMode(AuraKeyboardDevice auraKeyboard)
         {
-            _aura = aura;
+            _auraKeyboard = auraKeyboard;
         }
         
         public void Static(Color color)
@@ -16,8 +16,8 @@ namespace Starlight.Asus.Aura
 
         public void Static(byte zoneId, Color color)
         {
-            _aura.Write(
-                _aura.Hid<AuraApperancePacket>(0x5D, 0xB3)
+            _auraKeyboard.Set(
+                _auraKeyboard.Feature<AuraApperancePacket>()
                     .Zone(zoneId)
                     .Animation(AuraAnimation.Static)
                     .PrimaryColor(color)
@@ -60,8 +60,8 @@ namespace Starlight.Asus.Aura
             AuraAnimationSpeed speed
         )
         {
-            _aura.Write(
-                _aura.Hid<AuraApperancePacket>(0x5D, 0xB3)
+            _auraKeyboard.Set(
+                _auraKeyboard.Feature<AuraApperancePacket>()
                     .Zone(zoneId)
                     .Animation(animation)
                     .Speed(speed)
@@ -69,20 +69,20 @@ namespace Starlight.Asus.Aura
                     .SecondaryColor(secondary)
             );
             
-            _aura.Present();
+            _auraKeyboard.Present();
         }
         
         private void Animate(byte zoneId, AuraAnimation animation, Color primary, AuraAnimationSpeed speed)
         {
-            _aura.Write(
-                _aura.Hid<AuraApperancePacket>(0x5D, 0xB3)
+            _auraKeyboard.Set(
+                _auraKeyboard.Feature<AuraApperancePacket>()
                     .Zone(zoneId)
                     .Animation(animation)
                     .Speed(speed)
                     .PrimaryColor(primary)
             );
             
-            _aura.Present();
+            _auraKeyboard.Present();
         }
         
         private void Animate(byte zoneId,
@@ -90,14 +90,14 @@ namespace Starlight.Asus.Aura
             AuraAnimationSpeed speed
         )
         {
-            _aura.Write(
-                _aura.Hid<AuraApperancePacket>(0x5D, 0xB3)
+            _auraKeyboard.Set(
+                _auraKeyboard.Feature<AuraApperancePacket>()
                     .Zone(zoneId)
                     .Animation(animation)
                     .Speed(speed)
             );
             
-            _aura.Present();
+            _auraKeyboard.Present();
         }
     }
 }

@@ -1,12 +1,14 @@
 ﻿using System.Drawing;
 using Starlight.Asus;
 using Starlight.Asus.AnimeMatrix;
-using Starlight.Asus.Aura;
+using Starlight.Asus.AuraKeyboard;
 
-using var anime = new AnimeMatrixDevice();
-anime.SetBuiltInAnimation(true, new AnimeMatrixBuiltIn(AnimeMatrixBuiltIn.Running.RogLogoGlitch, AnimeMatrixBuiltIn.Sleeping.Starfield, AnimeMatrixBuiltIn.Shutdown.GlitchOut, AnimeMatrixBuiltIn.Startup.GlitchConstruction));
+// using var anime = new AnimeMatrixDevice();
+// anime.SetBuiltInAnimation(true, new AnimeMatrixBuiltIn(AnimeMatrixBuiltIn.Running.RogLogoGlitch, AnimeMatrixBuiltIn.Sleeping.Starfield, AnimeMatrixBuiltIn.Shutdown.GlitchOut, AnimeMatrixBuiltIn.Startup.GlitchConstruction));
 
-using var aura = new AuraDevice();
+using var aura = new AuraKeyboardDevice();
+var statusData = aura.GetStatus();
+
 aura.Mode.Static(Color.Aqua);
 
 // Task.Run(() =>

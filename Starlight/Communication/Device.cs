@@ -20,9 +20,16 @@ namespace Starlight.Communication
 
         internal T Feature<T>(params byte[] command) where T : FeaturePacket
         {
-            return (T)Activator.CreateInstance(typeof(T), command)!;
+            try
+            {
+                return (T)Activator.CreateInstance(typeof(T), command)!;
+            }
+            catch (Exception e)
+            {
+                return (T)Activator.CreateInstance(typeof(T), new object[] { })!;
+            }
         }
-        
+
         internal T Hid<T>(params byte[] command) where T : Packet
         {
             try
