@@ -7,7 +7,8 @@ using Starlight.Asus.AuraKeyboard;
 // anime.SetBuiltInAnimation(true, new AnimeMatrixBuiltIn(AnimeMatrixBuiltIn.Running.RogLogoGlitch, AnimeMatrixBuiltIn.Sleeping.Starfield, AnimeMatrixBuiltIn.Shutdown.GlitchOut, AnimeMatrixBuiltIn.Startup.GlitchConstruction));
 
 using var aura = new AuraKeyboardDevice();
-var statusData = aura.GetStatus();
+var status = aura.QueryStatus();
+var layout = aura.QueryKeyboardLayout();
 
 aura.Mode.Static(Color.Aqua);
 

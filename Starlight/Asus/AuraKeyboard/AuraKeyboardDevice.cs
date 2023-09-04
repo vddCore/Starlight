@@ -13,19 +13,13 @@ namespace Starlight.Asus.AuraKeyboard
             Mode = new AuraMode(this);
         }
 
-        public AuraKeyboardInformation GetStatus()
+        public AuraKeyboardInformation QueryStatus()
         {
             Set(Feature<AuraPacket>().AppendData(Encoding.ASCII.GetBytes("ASUS Tech.Inc.")));
             Get(Feature<AuraPacket>());
-
-            var str = Encoding.ASCII.GetBytes(" 1");
-
-            Set(Feature<AuraPacket>()
-                .AppendData(0x05)
-                .AppendData(str)
-                .AppendData(0x00, 0x20)
-            );
-
+            
+            // 0x05, " 1\0 "
+            Set(Feature<AuraPacket>().AppendData(0x05, 0x20, 0x31, 0x00, 0x20));
             var statusData = Get(Feature<AuraPacket>());
             // statusData[5]: Keyboard Status Data Length (starts at statusData[9])
             // statusData[9]: Keyboard Backlight Type
@@ -54,6 +48,13 @@ namespace Starlight.Asus.AuraKeyboard
                 statusData[0x0E],
                 statusData[0x0A] >= 0x23 ? statusData[0x11] : null // only preset on models from 2023 onwards
             );
+        }
+
+        public AuraKeyboardLayout QueryKeyboardLayout()
+        {
+            var packet = Feature<AuraPacket>(0xB9);
+            Set(packet);
+            return (AuraKeyboardLayout)Get(packet)[4];
         }
 
         public void SetBrightness(BrightnessLevel level)
