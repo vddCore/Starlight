@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using Starlight.Communication;
+using Hideous;
 
 namespace Starlight.Asus.AnimeMatrix
 {
@@ -13,7 +13,7 @@ namespace Starlight.Asus.AnimeMatrix
         private readonly byte[] _displayBuffer = new byte[UpdatePageLength * 3];
 
         public AnimeMatrixDevice()
-            : base(new(0x0B05, 0x193B, maxFeatureReportLength: 640))
+            : base(new(0x0B05, 0x193B, MaxFeatureReportLength: 640))
         {
         }
         
@@ -21,7 +21,7 @@ namespace Starlight.Asus.AnimeMatrix
         {
             Set(Feature<AnimeMatrixPacket>(data));
         }
-
+        
         public int Columns(int row)
         {
             EnsureRowInRange(row);  

@@ -1,6 +1,6 @@
-using static Starlight.Communication.Platform.Linux.LibUsb;
+using static Hideous.Platform.Linux.LibUsb;
 
-namespace Starlight.Communication.Platform
+namespace Hideous.Platform
 {
     internal class LinuxUsbProvider : UsbProvider
     {
@@ -75,7 +75,7 @@ namespace Starlight.Communication.Platform
 
             byte bmRequestType = 0x21;
             byte bRequest = 0x09;
-            ushort wValue = 0x035E;
+            ushort wValue = (ushort)((0x03 << 8) | data[0]);
             ushort wIndex = 0;
             ushort wLength = (ushort)data.Length;
 
@@ -106,7 +106,7 @@ namespace Starlight.Communication.Platform
 
         public override byte[] Get(byte[] data)
         {
-            return null;
+            return null!;
         }
 
         public override void Write(byte[] data) 

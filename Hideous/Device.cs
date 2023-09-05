@@ -1,6 +1,6 @@
-﻿using Starlight.Communication.Platform;
+﻿using Hideous.Platform;
 
-namespace Starlight.Communication
+namespace Hideous
 {
     public abstract class Device : IDisposable
     {
@@ -16,21 +16,13 @@ namespace Starlight.Communication
             {
                 _usbProvider = new WindowsUsbProvider(characteristics);
             }
-        }
-
-        internal T Feature<T>(params byte[] command) where T : FeaturePacket
-        {
-            try
+            else
             {
-                return (T)Activator.CreateInstance(typeof(T), command)!;
-            }
-            catch (Exception e)
-            {
-                return (T)Activator.CreateInstance(typeof(T), new object[] { })!;
+                throw new PlatformNotSupportedException("Your platform is not supported.");
             }
         }
 
-        internal T Hid<T>(params byte[] command) where T : Packet
+        public T Feature<T>(params byte[] command) where T : FeaturePacket
         {
             try
             {
@@ -38,24 +30,32 @@ namespace Starlight.Communication
             }
             catch
             {
-                // we'll try something else.
+                return (T)Activator.CreateInstance(typeof(T))!;
             }
-
-            return (T)Activator.CreateInstance(typeof(T))!;
         }
 
-        internal void Set(FeaturePacket packet)
-            => _usbProvider?.Set(packet.Data);
+        public T Packet<T>(params byte[] command) where T : Packet
+        {
+            try
+            {
+                return (T)Activator.CreateInstance(typeof(T), command)!;
+            }
+            catch
+            {
+                return (T)Activator.CreateInstance(typeof(T))!;
+            }
+        }
 
-        internal byte[] Get(FeaturePacket packet)
-            => _usbProvider?.Get(packet.Data);
+        public void Set(FeaturePacket packet)
+            => _usbProvider.Set(packet.Data);
 
-        internal void Write(HidPacket packet)
-            => _usbProvider?.Write(packet.Data);
+        public byte[] Get(FeaturePacket packet)
+            => _usbProvider.Get(packet.Data);
+
+        public void Write(Packet packet)
+            => _usbProvider.Write(packet.Data);
 
         public void Dispose()
-        {
-            _usbProvider?.Dispose();
-        }
+            => _usbProvider.Dispose();
     }
 }

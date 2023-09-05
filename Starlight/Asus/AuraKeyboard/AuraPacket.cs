@@ -1,4 +1,4 @@
-﻿using Starlight.Communication;
+﻿using Hideous;
 
 namespace Starlight.Asus.AuraKeyboard
 {

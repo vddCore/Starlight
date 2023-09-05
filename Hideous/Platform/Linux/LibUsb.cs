@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace Starlight.Communication.Platform.Linux
+namespace Hideous.Platform.Linux
 {
     internal class LibUsb
     {

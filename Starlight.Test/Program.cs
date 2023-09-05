@@ -4,11 +4,23 @@ using Starlight.Asus.AnimeMatrix;
 using Starlight.Asus.AuraKeyboard;
 
 // using var anime = new AnimeMatrixDevice();
-// anime.SetBuiltInAnimation(true, new AnimeMatrixBuiltIn(AnimeMatrixBuiltIn.Running.RogLogoGlitch, AnimeMatrixBuiltIn.Sleeping.Starfield, AnimeMatrixBuiltIn.Shutdown.GlitchOut, AnimeMatrixBuiltIn.Startup.GlitchConstruction));
+//
+// while (true)
+// {
+//     Console.Clear();
+//     
+//     var config = anime.GetConfig();
+//
+//     for (var i = 0; i < config.Length; i++)
+//     {
+//         Console.Write($"{config[i]:X2} ");
+//     }
+// }
 
 using var aura = new AuraKeyboardDevice();
 var status = aura.QueryStatus();
 var layout = aura.QueryKeyboardLayout();
+var defaultMode = aura.QueryDefaultModes();
 
 aura.Mode.Static(Color.Aqua);
 

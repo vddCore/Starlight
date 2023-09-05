@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using HidSharp;
 
-namespace Starlight.Communication.Platform
+namespace Hideous.Platform
 {
     internal class WindowsUsbProvider : UsbProvider
     {

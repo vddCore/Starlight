@@ -1,14 +1,11 @@
-﻿using System.ComponentModel;
-using HidSharp;
-
-namespace Starlight.Communication
+﻿namespace Hideous
 {
-    internal abstract class Packet
+    public abstract class Packet
     {
-        public byte[] Data { get; protected set; }
+        public byte[] Data { get; protected set; } = new byte[0];
     }
 
-    internal abstract class Packet<T> : Packet
+    public abstract class Packet<T> : Packet
         where T : Packet
     {
         private int _currentDataIndex;
@@ -58,7 +55,7 @@ namespace Starlight.Communication
                 Data[_currentDataIndex] = data[i];
             }
 
-            return this as T;
+            return (this as T)!;
         }
     }
 }
