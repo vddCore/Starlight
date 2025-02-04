@@ -1,4 +1,5 @@
-# Archived! I no longer own a G14, switched to Framework Laptop 16 instead.
+~~# Archived! I no longer own a G14, switched to Framework Laptop 16 instead.~~
+Well that was a fucking lie apparently. Now I own both!
 
 ## Also check out [Zephyrus Control Center](https://github.com/vddcore/Zephyrus-Control-Center)
 
